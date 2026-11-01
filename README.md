@@ -1,6 +1,6 @@
 # Bridge Builder (2000) — WebAssembly & WebGL
 
-A web reconstruction of Alex Austin's 2000 bridge-construction game **Bridge Builder** demp (originally distributed as `bbdemo.exe`).
+A web reconstruction of Alex Austin's 2000 bridge-construction game **Bridge Builder** demo (originally distributed as `bbdemo.exe`).
 
 Rebuilt from disassembly and decompilation with an **AssemblyScript / WebAssembly** discrete physics core, an authentic **WebGL** rendering pipeline and the original 640×480 bitmap interface. Runs completely client-side in any modern browser with zero server dependencies or network assets.
 
