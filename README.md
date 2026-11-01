@@ -1,13 +1,10 @@
 # Bridge Builder (2000) — WebAssembly & WebGL
 
-[![Live Demo](https://img.shields.io/badge/Play_Now-GitHub_Pages-brightgreen?style=for-the-badge&logo=github)](https://s--i.github.io/BridgeBuilderDemo/)
-[![Tests](https://img.shields.io/badge/Tests-22_Passing-success?style=for-the-badge)](tests/ui_test.mjs)
+A web reconstruction of Alex Austin's 2000 bridge-construction game **Bridge Builder** demp (originally distributed as `bbdemo.exe`).
 
-A faithful web reconstruction of Alex Austin's pioneering 2000 bridge-construction game **Bridge Builder** (originally distributed as `bbdemo.exe`).
+Rebuilt from disassembly and decompilation with an **AssemblyScript / WebAssembly** discrete physics core, an authentic **WebGL** rendering pipeline and the original 640×480 bitmap interface. Runs completely client-side in any modern browser with zero server dependencies or network assets.
 
-Rebuilt from disassembly and decompilation with an **AssemblyScript / WebAssembly** discrete physics core, an authentic **WebGL** rendering pipeline, and the original 640×480 bitmap interface. Runs completely client-side in any modern browser with zero server dependencies or network assets.
-
-👉 **[Play the game online](https://s--i.github.io/BridgeBuilderDemo/)**
+https://s--i.github.io/BridgeBuilderDemo
 
 ---
 
