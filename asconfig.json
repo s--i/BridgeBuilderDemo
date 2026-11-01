@@ -1,0 +1,22 @@
+{
+  "targets": {
+    "debug": {
+      "outFile": "build/bridge.debug.wasm",
+      "textFile": "build/bridge.debug.wat",
+      "sourceMap": true,
+      "debug": true
+    },
+    "release": {
+      "outFile": "build/bridge.wasm",
+      "textFile": "build/bridge.wat",
+      "sourceMap": true,
+      "optimizeLevel": 3,
+      "shrinkLevel": 0,
+      "converge": false,
+      "noAssert": false
+    }
+  },
+  "options": {
+    "bindings": "esm"
+  }
+}

@@ -1,0 +1,11 @@
+.DS_Store
+__pycache__/
+*.pyc
+/bbdemo.exe
+/original/
+/tools/ghidra_*_PUBLIC/
+/.ghidra-user/
+/ghidra-project/
+node_modules/
+/build/
+
