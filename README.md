@@ -1,4 +1,4 @@
-# Bridge Builder (2000) — WebAssembly & WebGL
+# Demo version of Bridge Builder (2000), rebuilt in JavaScript, WebAssembly & WebGL
 
 A web reconstruction of Alex Austin's 2000 bridge-construction game **Bridge Builder** demo (originally distributed as `bbdemo.exe`).
 
