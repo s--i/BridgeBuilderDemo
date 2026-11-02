@@ -1536,7 +1536,71 @@ if (engine.beams.length !== beamCountBefore || engine.nodes.length !== nodeCount
   throw new Error('Clicks in letterbox should not create nodes or beams');
 }
 
-console.log('Test 21 Passed: Letterbox overrun scrolling, corner diagonal scrolling, and window blur/leave boundaries verified.');
+// 8. Top inner edge margin on canvas (widescreen vertical scrolling)
+centerCamera();
+startY = viewY;
+pointerOnCanvas = true;
+pointerInWindow = true;
+hoveredControlId = null;
+mouseLogicalX = 320;
+mouseLogicalY = 15; // within 20px top margin
+previousFrameTime = null;
+editorTime = 0;
+testTime = 86000;
+frame(testTime); // prime
+for (let i = 0; i < 6; i++) {
+  testTime += 1000 / 30;
+  frame(testTime);
+}
+scrolledY = viewY - startY;
+if (Math.abs(scrolledY - 12.0) > 0.1) {
+  throw new Error(`Expected 12.0 units scrolled up from top inner margin, got ${scrolledY}`);
+}
+
+// 9. Bottom inner edge margin on canvas
+centerCamera();
+startY = viewY;
+pointerOnCanvas = true;
+pointerInWindow = true;
+hoveredControlId = null;
+mouseLogicalX = 320;
+mouseLogicalY = 465; // within 20px bottom margin (>= 460)
+previousFrameTime = null;
+editorTime = 0;
+testTime = 87000;
+frame(testTime); // prime
+for (let i = 0; i < 6; i++) {
+  testTime += 1000 / 30;
+  frame(testTime);
+}
+scrolledY = startY - viewY;
+if (Math.abs(scrolledY - 12.0) > 0.1) {
+  throw new Error(`Expected 12.0 units scrolled down from bottom inner margin, got ${scrolledY}`);
+}
+
+// 10. Button hover suppresses edge scrolling (safe clicking/hovering)
+centerCamera();
+startY = viewY;
+startX = viewX;
+pointerOnCanvas = true;
+pointerInWindow = true;
+hoveredControlId = 'btn-editor-exit'; // hovering a top button
+mouseLogicalX = 10;
+mouseLogicalY = 10;
+previousFrameTime = null;
+editorTime = 0;
+testTime = 88000;
+frame(testTime); // prime
+for (let i = 0; i < 6; i++) {
+  testTime += 1000 / 30;
+  frame(testTime);
+}
+if (viewX !== startX || viewY !== startY) {
+  throw new Error(`Hovering an interactive button must suppress edge scrolling, moved (${startX - viewX}, ${startY - viewY})`);
+}
+hoveredControlId = null;
+
+console.log('Test 21 Passed: Letterbox overrun scrolling, corner diagonal scrolling, inner-margin vertical scrolling, and button hover suppression verified.');
 
 console.log('=== TEST 22: Zoom Control Click & Hold Repetition ===');
 navigate('editor');

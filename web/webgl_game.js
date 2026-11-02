@@ -1335,17 +1335,23 @@ function tickGameplayInput() {
   if (isDialogOpen()) return;
 
   // 1. Edge scrolling (2 world units per tick)
-  // Recreates authentic fullscreen feel: scrolling continues when cursor is at screen edge or in letterbox bars
+  // Recreates authentic fullscreen feel: scrolling continues when cursor is at screen edge,
+  // in letterbox bars, or within a comfortable edge margin when not hovering interactive HUD buttons.
   if (pointerOnCanvas || pointerInWindow) {
-    if (mouseLogicalX <= 0) {
-      viewX -= 2.0;
-    } else if (mouseLogicalX >= 639) {
-      viewX += 2.0;
-    }
-    if (mouseLogicalY <= 0) {
-      viewY += 2.0;
-    } else if (mouseLogicalY >= 479) {
-      viewY -= 2.0;
+    const isOverButton = hoveredControlId !== null;
+    const SCROLL_MARGIN = 20;
+
+    if (!isOverButton) {
+      if (mouseLogicalX <= SCROLL_MARGIN) {
+        viewX -= 2.0;
+      } else if (mouseLogicalX >= 640 - SCROLL_MARGIN) {
+        viewX += 2.0;
+      }
+      if (mouseLogicalY <= SCROLL_MARGIN) {
+        viewY += 2.0;
+      } else if (mouseLogicalY >= 480 - SCROLL_MARGIN) {
+        viewY -= 2.0;
+      }
     }
   }
 
