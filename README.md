@@ -41,6 +41,7 @@ https://s--i.github.io/BridgeBuilderDemo
 | **Home** | <kbd>S</kbd> | Start Game (Level selection) |
 | **Home** | <kbd>L</kbd> | Load Bridge (`.brg` file picker) |
 | **Home** | <kbd>R</kbd> | View authentic Readme |
+| **Home** | <kbd>E</kbd> | Exit (Navigate to GitHub repository) |
 | **Editor** | <kbd>T</kbd> | Start testing bridge |
 | **Simulation** | <kbd>T</kbd> | Dispatch train (Run Train) |
 | **Simulation** | <kbd>S</kbd> | Toggle slow motion (0.25× speed) |

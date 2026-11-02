@@ -335,7 +335,7 @@ function hideHtmlDialog() {
 
 function isDialogOpen() {
   const container = document.getElementById('html-dialog-container');
-  return container && container.style.display !== 'none';
+  return !!(container && container.style.display && container.style.display !== 'none');
 }
 
 // Transient status message (e.g. "Download requested")
@@ -432,6 +432,19 @@ function getControls(screen) {
       action: 'readme',
       shortcut: 'R',
       mnemonicIndex: 0
+    });
+    controls.push({
+      id: 'btn-home-exit',
+      text: 'Exit',
+      x: 320,
+      y: 368,
+      size: 16,
+      advance: 16,
+      align: 'center',
+      action: 'exit',
+      shortcut: 'E',
+      mnemonicIndex: 0,
+      tooltip: 'Exit to GitHub repository (https://github.com/s--i/BridgeBuilderDemo)'
     });
     // Footer
     controls.push({
@@ -989,7 +1002,11 @@ function dispatch(action, payload = null) {
       break;
 
     case 'exit':
-      if (currentScreen === 'levels' || currentScreen === 'readme') {
+      if (currentScreen === 'home') {
+        if (typeof window !== 'undefined' && window.location) {
+          window.location.href = 'https://github.com/s--i/BridgeBuilderDemo';
+        }
+      } else if (currentScreen === 'levels' || currentScreen === 'readme') {
         navigate('home');
       } else if (currentScreen === 'editor' || currentScreen === 'simulation') {
         exitWithAutosave();

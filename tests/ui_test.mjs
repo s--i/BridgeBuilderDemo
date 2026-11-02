@@ -102,12 +102,14 @@ const document = {
     documentListeners.get(event).push(handler);
   }
 };
+document.getElementById('html-dialog-container').style.display = 'none';
 
 const windowListeners = new Map();
 const window = {
   innerWidth: 800,
   innerHeight: 600,
   devicePixelRatio: 1,
+  location: { href: 'http://localhost' },
   addEventListener: (event, handler) => {
     if (!windowListeners.has(event)) windowListeners.set(event, []);
     windowListeners.get(event).push(handler);
@@ -231,8 +233,24 @@ if (currentScreen !== 'home') throw new Error(`Expected currentScreen 'home', go
 const homeControls = getControls('home');
 const homeLabels = homeControls.map(c => c.text);
 console.log('Home controls:', homeLabels);
-if (!homeLabels.includes('Bridge') || !homeLabels.includes('Builder') || !homeLabels.includes('Start Game') || !homeLabels.includes('Load Bridge') || !homeLabels.includes('Readme')) {
+if (!homeLabels.includes('Bridge') || !homeLabels.includes('Builder') || !homeLabels.includes('Start Game') || !homeLabels.includes('Load Bridge') || !homeLabels.includes('Readme') || !homeLabels.includes('Exit')) {
   throw new Error('Home screen missing expected controls');
+}
+const exitCtrl = homeControls.find(c => c.id === 'btn-home-exit');
+if (!exitCtrl || exitCtrl.y !== 368 || exitCtrl.action !== 'exit' || exitCtrl.shortcut !== 'E') {
+  throw new Error('Home Exit control has incorrect properties');
+}
+// Test clicking Exit on Home navigates to GitHub repo
+window.location.href = 'http://localhost';
+dispatch('exit');
+if (window.location.href !== 'https://github.com/s--i/BridgeBuilderDemo') {
+  throw new Error(`Dispatching exit on home should set location to GitHub repo, got: ${window.location.href}`);
+}
+// Test pressing 'E' shortcut on Home navigates to GitHub repo
+window.location.href = 'http://localhost';
+sendKeyDown({ key: 'e' });
+if (window.location.href !== 'https://github.com/s--i/BridgeBuilderDemo') {
+  throw new Error(`Pressing 'e' on home should navigate to GitHub repo, got: ${window.location.href}`);
 }
 console.log('Test 1 Passed: Home screen verified.');
 
@@ -740,12 +758,22 @@ const accessibleEl = mockElements.get('accessible-controls');
 const btnStart = accessibleEl.children.find(c => c.id === 'btn-start-game');
 const btnLoad = accessibleEl.children.find(c => c.id === 'btn-load-bridge');
 const btnReadme = accessibleEl.children.find(c => c.id === 'btn-readme');
+const btnExit = accessibleEl.children.find(c => c.id === 'btn-home-exit');
 if (!btnStart || btnStart.getAttribute('aria-keyshortcuts') !== 'S') throw new Error('Start Game missing aria-keyshortcuts="S"');
 if (!btnLoad || btnLoad.getAttribute('aria-keyshortcuts') !== 'L') throw new Error('Load Bridge missing aria-keyshortcuts="L"');
 if (!btnReadme || btnReadme.getAttribute('aria-keyshortcuts') !== 'R') throw new Error('Readme missing aria-keyshortcuts="R"');
+if (!btnExit || btnExit.getAttribute('aria-keyshortcuts') !== 'E') throw new Error('Exit missing aria-keyshortcuts="E"');
 if (btnStart.getAttribute('aria-label') !== 'Start Game') throw new Error('Start Game aria-label wrong');
 if (btnLoad.getAttribute('aria-label') !== 'Load Bridge') throw new Error('Load Bridge aria-label wrong');
 if (btnReadme.getAttribute('aria-label') !== 'Readme') throw new Error('Readme aria-label wrong');
+if (btnExit.getAttribute('aria-label') !== 'Exit') throw new Error('Exit aria-label wrong');
+
+// Clicking accessible Exit button navigates to GitHub repo
+window.location.href = 'http://localhost';
+btnExit.click();
+if (window.location.href !== 'https://github.com/s--i/BridgeBuilderDemo') {
+  throw new Error(`Clicking accessible Exit button should navigate to GitHub repo, got: ${window.location.href}`);
+}
 
 // Test 'S' on Home -> navigates to 'levels'
 sendKeyDown({ key: 's' });
@@ -1128,9 +1156,11 @@ const homeCtrls = getControls('home');
 const ctrlStart = homeCtrls.find(c => c.id === 'btn-start-game');
 const ctrlLoad = homeCtrls.find(c => c.id === 'btn-load-bridge');
 const ctrlReadme = homeCtrls.find(c => c.id === 'btn-readme');
+const ctrlHomeExit = homeCtrls.find(c => c.id === 'btn-home-exit');
 verifyControlMnemonic(ctrlStart, 'S', 0);
 verifyControlMnemonic(ctrlLoad, 'L', 0);
 verifyControlMnemonic(ctrlReadme, 'R', 0);
+verifyControlMnemonic(ctrlHomeExit, 'E', 0);
 
 // 2. Editor controls
 loadLevelByName('level01.lvl');
