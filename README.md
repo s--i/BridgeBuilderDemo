@@ -138,5 +138,5 @@ open web/index.html   # On macOS
 
 ## Historical Context & Credits
 
-* **Original Game:** *Bridge Builder* was originally created in **2000 by Alex Austin** and released freely as `bbdemo.exe`. It became a viral indie classic, spawning the subsequent *Pontifex* series, *Bridge Construction Set*, and an entire genre of physics construction games.
-* **Preservation Purpose:** This repository is an educational reverse-engineering and digital preservation project to keep the original 2000 physics, level design, and aesthetics playable on modern platforms without requiring vintage Windows x86 virtual machines.
+* **Original Game:** *Bridge Builder* was originally created in **2000 by Alex Austin** and pioneered the physics-based bridge-simulation genre in the early 2000s.
+* **Preservation Purpose:** This repository is an educational reverse-engineering and digital preservation project to keep the original 2000 physics, level design and aesthetics playable on modern browsers without requiring and old Windows PC.
