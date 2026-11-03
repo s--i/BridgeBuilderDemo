@@ -1733,5 +1733,109 @@ for (const fn of simZoomIn._listeners.pointerup) fn({});
 
 console.log('Test 22 Passed: Click and hold repetition on Zoom In/Out buttons verified in editor and simulation.');
 
+console.log('=== TEST 23: Authentic Editor Layout & 8-Car Train Held Modifier ===');
+navigate('editor');
+loadLevelByName('level01.lvl');
+centerCamera();
+
+// 1. Authentic Editor Layout:
+// In bbdemo.exe, Cost and Budget are always drawn at (0, 448) and (0, 464),
+// and Save at (320, 464) and Clear at (560, 464) are always unobstructed.
+pointerOnCanvas = true;
+pointerInWindow = true;
+const anchorNode = engine.nodes[0];
+if (anchorNode.type !== 2) throw new Error('Expected node 0 to be anchor');
+
+// Hover anchor node
+mouseLogicalX = (anchorNode.x - viewX) * zoom + 320.0;
+mouseLogicalY = 240.0 - (anchorNode.y - viewY) * zoom;
+let ctrls = getControls('editor');
+
+if (!ctrls.some(c => c.id === 'lbl-cost-title') || !ctrls.some(c => c.id === 'lbl-budget-title')) {
+  throw new Error('Authentic editor must display Cost and Budget when hovering anchor');
+}
+if (ctrls.some(c => c.id === 'lbl-hint-select') || ctrls.some(c => c.id === 'lbl-hint-delete')) {
+  throw new Error('Editor should not have hover hint labels');
+}
+if (!ctrls.some(c => c.id === 'btn-editor-save' && c.x === 320 && c.y === 464)) {
+  throw new Error('Save button at (320, 464) must be visible and unobstructed');
+}
+
+// Create a dynamic node
+engine.editorClick(anchorNode.x, anchorNode.y);
+const dynX = anchorNode.x + 8.0;
+const dynY = anchorNode.y;
+engine.editorClick(dynX, dynY);
+engine.editorCancel(); // Clear selection
+
+// Hover dynamic node
+const dynamicNodeIdx = engine.nodes.findIndex(n => n.type === 1);
+if (dynamicNodeIdx < 0) throw new Error('Dynamic node was not created');
+const dynamicNode = engine.nodes[dynamicNodeIdx];
+mouseLogicalX = (dynamicNode.x - viewX) * zoom + 320.0;
+mouseLogicalY = 240.0 - (dynamicNode.y - viewY) * zoom;
+ctrls = getControls('editor');
+
+if (!ctrls.some(c => c.id === 'lbl-cost-title') || !ctrls.some(c => c.id === 'lbl-budget-title')) {
+  throw new Error('Authentic editor must display Cost and Budget when hovering dynamic node');
+}
+if (ctrls.some(c => c.id === 'lbl-hint-select') || ctrls.some(c => c.id === 'lbl-hint-delete')) {
+  throw new Error('Editor should not have hover hint labels');
+}
+if (!ctrls.some(c => c.id === 'btn-editor-save' && c.x === 320 && c.y === 464)) {
+  throw new Error('Save button at (320, 464) must remain visible when hovering dynamic node');
+}
+
+// 2. 8-Car Heavy Train Easter Egg (H held when starting train)
+loadLevelByName('level01.lvl');
+
+// A solitary 'h' keydown does NOT set a persistent toggle or status toast
+const prevMsg = statusMessage;
+sendKeyDown({ key: 'h' });
+sendKeyUp({ key: 'h' });
+if (statusMessage !== prevMsg) {
+  throw new Error(`Pressing 'h' alone should not show a persistent status toast, got: '${statusMessage}'`);
+}
+
+// Starting train normally without holding 'h' spawns standard 4 cars
+dispatch('test');
+dispatch('run-train');
+if (engine.trainCars.length !== 4) {
+  throw new Error(`Normal dispatch must spawn 4 cars, got: ${engine.trainCars.length}`);
+}
+dispatch('edit');
+
+// Starting train with 'H' held down spawns 8 cars
+dispatch('test');
+sendKeyDown({ key: 'h' }); // Hold 'H'
+dispatch('run-train');     // Start train while 'H' is held
+if (engine.trainCars.length !== 8) {
+  throw new Error(`Starting train with 'H' held must spawn 8 cars, got: ${engine.trainCars.length}`);
+}
+if (engine.trainCars[0].type !== 1) throw new Error('First car must be locomotive (type 1)');
+for (let c = 1; c < 8; c++) {
+  if (engine.trainCars[c].type !== 0) throw new Error(`Car ${c} must be freight car (type 0)`);
+}
+
+// Step simulation a few ticks with 8 cars
+for (let i = 0; i < 15; i++) {
+  engine.step();
+}
+if (engine.trainCars.length !== 8) throw new Error('8 cars must remain active during simulation');
+
+// Release 'H' and return to editor
+sendKeyUp({ key: 'h' });
+dispatch('edit');
+
+// Re-starting train without holding 'H' reverts to standard 4 cars
+dispatch('test');
+dispatch('run-train');
+if (engine.trainCars.length !== 4) {
+  throw new Error(`Re-starting train without 'H' held must spawn 4 cars, got: ${engine.trainCars.length}`);
+}
+dispatch('edit');
+
+console.log('Test 23 Passed: Authentic editor layout and 8-car held modifier verified.');
+
 console.log('ALL VERIFICATION TESTS COMPLETED SUCCESSFULLY!');
 process.exit(0);

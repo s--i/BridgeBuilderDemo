@@ -75,6 +75,14 @@ export function startTrain(): void {
   }
 }
 
+export function setConfiguredTrainCarCount(count: i32): void {
+  physics.setConfiguredTrainCarCount(count);
+}
+
+export function getConfiguredTrainCarCount(): i32 {
+  return physics.getConfiguredTrainCarCount();
+}
+
 export function togglePause(): bool {
   return physics.togglePause();
 }

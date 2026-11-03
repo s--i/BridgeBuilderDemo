@@ -109,6 +109,14 @@ class WasmBridgeEngine {
   get bridgeCollapsed() { return this.wasm.isBridgeCollapsed(); }
   get trainFallen() { return this.wasm.isTrainFallen ? this.wasm.isTrainFallen() : false; }
   get brokenBeamCount() { return this.wasm.getBrokenBeamCount ? this.wasm.getBrokenBeamCount() : 0; }
+  get trainCarCount() {
+    return this.wasm && this.wasm.getConfiguredTrainCarCount ? this.wasm.getConfiguredTrainCarCount() : 4;
+  }
+  set trainCarCount(count) {
+    if (this.wasm && this.wasm.setConfiguredTrainCarCount) {
+      this.wasm.setConfiguredTrainCarCount(count);
+    }
+  }
 
   get editorSelection() { return this.wasm.getEditorSelection(); }
   get editorResult() { return this.wasm.getEditorResult(); }
@@ -124,6 +132,7 @@ class WasmBridgeEngine {
     return {
       hoveredNode,
       hoveredBeam,
+      sourceNode: this.editorSelection,
       preview: type ? {
         from: this.editorSelection,
         x: hoveredNode >= 0 ? this.wasm.getNodeX(hoveredNode) : this.editorSnap(x),

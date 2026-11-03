@@ -34,6 +34,7 @@ export class PhysicsEngine {
   nodes: Array<Node>;
   beams: Array<Beam>;
   trainCars: Array<TrainCar> = new Array<TrainCar>();
+  trainCarConfigCount: i32 = 4;
   simulationActive: bool = false;
   trainActive: bool = false;
   paused: bool = false;
@@ -99,6 +100,14 @@ export class PhysicsEngine {
     this.clearStatus();
   }
 
+  setConfiguredTrainCarCount(count: i32): void {
+    this.trainCarConfigCount = count === 8 ? 8 : 4;
+  }
+
+  getConfiguredTrainCarCount(): i32 {
+    return this.trainCarConfigCount;
+  }
+
   spawnTrain(): void {
     if (this.trainActive) return;
     if (!this.hasSnapshot) {
@@ -111,8 +120,9 @@ export class PhysicsEngine {
     this.trainActive = true;
     this.paused = false;
     this.trainFallen = false;
-    // 0x00403030 / 0x00407c78: ordinary four-car mode, locomotive first.
-    for (let c = 0; c < 4; c++) {
+    // 0x00403030 / 0x00407c78: ordinary four-car mode or secret 8-car heavy train mode.
+    let carCount = this.trainCarConfigCount;
+    for (let c = 0; c < carCount; c++) {
       let car = new TrainCar();
       car.type = c == 0 ? 1 : 0;
       car.x = this.level.leftLimit - 16 - <f32>(c * 12);

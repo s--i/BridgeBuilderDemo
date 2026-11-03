@@ -47,6 +47,7 @@ https://s--i.github.io/BridgeBuilderDemo
 | **Simulation** | <kbd>S</kbd> | Toggle slow motion (0.25× speed) |
 | **Simulation** | <kbd>P</kbd> | Toggle simulation pause |
 | **Simulation** | <kbd>A</kbd> | Toggle stress analysis coloring |
+| **Simulation** | Hold <kbd>H</kbd> when starting train | 8-car heavy train easter egg |
 | **Any** | <kbd>Z</kbd> / <kbd>Shift</kbd>+<kbd>Z</kbd> | Zoom in / Zoom out |
 | **Any** | <kbd>Esc</kbd> | Cancel node selection / Return to previous screen |
 

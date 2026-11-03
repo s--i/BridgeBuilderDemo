@@ -18,6 +18,7 @@ let isSlow = false;
 let levelPassedReported = false;
 let isZHeld = false;
 let isShiftHeld = false;
+let isHHeld = false;
 let zoomSteppedThisTick = false;
 let heldZoomAction = null;
 let pointerDownTargetAction = null;
@@ -581,7 +582,7 @@ go to www.glsetup.com for the latest OpenGL drivers`;
       action: 'zoom-out'
     });
 
-    // Cost & Budget at Y=448/464, values at X=128
+    // Cost & Budget at Y=448/464
     const cost = engine ? engine.getCost() : 0;
     const budget = engine ? engine.level.budget : 0;
     const overBudget = cost >= budget;
@@ -917,6 +918,7 @@ function navigate(screen) {
   previousFrameTime = null;
   isZHeld = false;
   isShiftHeld = false;
+  isHHeld = false;
   zoomSteppedThisTick = false;
   heldZoomAction = null;
   pointerDownTargetAction = null;
@@ -1032,6 +1034,7 @@ function dispatch(action, payload = null) {
       if (engine && currentScreen === 'editor') {
         isSlow = false;
         levelPassedReported = false;
+        engine.trainCarCount = 4;
         engine.startTest();
         navigate('simulation');
       }
@@ -1040,6 +1043,7 @@ function dispatch(action, payload = null) {
     case 'edit':
       if (engine && currentScreen === 'simulation') {
         engine.resetSimulation();
+        engine.trainCarCount = 4;
         isSlow = false;
         levelPassedReported = false;
         navigate('editor');
@@ -1062,6 +1066,8 @@ function dispatch(action, payload = null) {
 
     case 'run-train':
       if (engine && currentScreen === 'simulation' && !engine.trainActive) {
+        // H must be held when starting the train to spawn 8 cars; otherwise standard 4 cars
+        engine.trainCarCount = isHHeld ? 8 : 4;
         engine.startTrain();
         syncAccessibleControls();
       }
@@ -1252,6 +1258,11 @@ window.addEventListener('keydown', (e) => {
     }
   }
 
+  // Track held 'H' modifier: H must be held when starting the train to spawn 8 cars
+  if (e.key === 'h' || e.key === 'H') {
+    isHHeld = true;
+  }
+
   // Match keyboard input against enabled controls on current screen
   const keyUpper = e.key.toUpperCase();
   const controls = getControls(currentScreen);
@@ -1283,6 +1294,9 @@ window.addEventListener('keyup', (e) => {
   if (e.key === 'Shift') {
     isShiftHeld = false;
   }
+  if (e.key === 'h' || e.key === 'H') {
+    isHHeld = false;
+  }
 });
 
 window.addEventListener('pointerup', () => {
@@ -1293,6 +1307,7 @@ window.addEventListener('pointerup', () => {
 window.addEventListener('blur', () => {
   isZHeld = false;
   isShiftHeld = false;
+  isHHeld = false;
   heldZoomAction = null;
   pointerDownTargetAction = null;
 });
